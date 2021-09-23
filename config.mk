@@ -23,9 +23,13 @@ FREETYPEINC = /usr/include/freetype2
 # Tag previews are done with Imlib2
 IMLIB2LIBS = -lImlib2
 
+# yajl
+YAJLLIBS = -lyajl
+YAJLINC = /usr/include/yajl
+
 # includes and libs
-INCS = -I${X11INC} -I${FREETYPEINC}
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXrender ${IMLIB2LIBS}
+INCS = -I${X11INC} -I${FREETYPEINC} -I${YAJLINC}
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXrender ${IMLIB2LIBS} ${YAJLLIBS}
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
