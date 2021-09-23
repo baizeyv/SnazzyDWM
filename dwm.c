@@ -728,12 +728,16 @@ drawbar(Monitor *m)
 	char *masterclientontag[LENGTH(tags)];
 	char alttagdisp[64];
 	char *altmasterclientontag[LENGTH(tags)];
+	Fnt *cur;
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
+		cur = drw->fonts; // remember which was the first font
+		drw->fonts = drw->fonts->next; // skip to the second font, add more of these to get to third, fourth etc.
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext);
 		drw_text(drw, m->ww - tw, 0, tw, bh, lrpad / 2, stext, 0);
+		drw->fonts = cur; // set the normal font back to the first font
 	}
 
 	for (i = 0; i < LENGTH(tags); i++) {
