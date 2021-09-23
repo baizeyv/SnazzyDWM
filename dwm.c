@@ -20,6 +20,7 @@
  *
  * To understand everything else, start reading main().
  */
+#include <ctype.h> /* for tolower function, very tiny standard library */
 #include <errno.h>
 #include <locale.h>
 #include <signal.h>
@@ -286,6 +287,9 @@ static Window root, wmcheckwin;
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
+unsigned int tagw[LENGTH(tags)];
+unsigned int alttagw[LENGTH(tags)];
+
 /* compile-time check if all tags fit into an unsigned int bit array. */
 struct NumTags { char limitexceeded[LENGTH(tags) > 31 ? -1 : 1]; };
 
@@ -431,7 +435,7 @@ attachstack(Client *c)
 void
 buttonpress(XEvent *e)
 {
-	unsigned int i, x, click;
+	unsigned int i, x, click, occ = 0;
 	Arg arg = {0};
 	Client *c;
 	Monitor *m;
@@ -446,9 +450,14 @@ buttonpress(XEvent *e)
 	}
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
-		do
-			x += TEXTW(tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
+		for (c = m->clients; c; c = c->next)
+			occ |= c->tags == 255 ? 0 : c->tags;
+		do {
+			/* do not reserve space for vacant tags */
+			if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+				continue;
+			x += selmon->alttag ? alttagw[i] : tagw[i];
+		} while (ev->x >= x && ++i < LENGTH(tags));
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
@@ -710,11 +719,15 @@ dirtomon(int dir)
 void
 drawbar(Monitor *m)
 {
-	int x, w, wdelta, tw = 0;
+	int x, w, tw = 0;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
+	char tagdisp[64];
+	char *masterclientontag[LENGTH(tags)];
+	char alttagdisp[64];
+	char *altmasterclientontag[LENGTH(tags)];
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
@@ -723,17 +736,58 @@ drawbar(Monitor *m)
 		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
 	}
 
+	for (i = 0; i < LENGTH(tags); i++) {
+		masterclientontag[i] = NULL;
+		altmasterclientontag[i] = NULL;
+	}
+
 	for (c = m->clients; c; c = c->next) {
-		occ |= c->tags;
+		occ |= c->tags == 255 ? 0 : c->tags;
 		if (c->isurgent)
 			urg |= c->tags;
+		if (!selmon->alttag) {
+			for (i = 0; i < LENGTH(tags); i++)
+				if (!masterclientontag[i] && c->tags & (1<<i)) {
+					XClassHint ch = { NULL, NULL };
+					XGetClassHint(dpy, c->win, &ch);
+					masterclientontag[i] = ch.res_class;
+					if (lcaselbl)
+					masterclientontag[i][0] = tolower(masterclientontag[i][0]);
+				}
+		} else {
+			for (i = 0; i < LENGTH(tags); i++)
+				if (!altmasterclientontag[i] && c->tags & (1<<i)) {
+					XClassHint ch = { NULL, NULL };
+					XGetClassHint(dpy, c->win, &ch);
+					altmasterclientontag[i] = ch.res_class;
+					if (altlcaselbl)
+					altmasterclientontag[i][0] = tolower(altmasterclientontag[i][0]);
+				}
+		}
 	}
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
-		w = TEXTW(tags[i]);
-		wdelta = selmon->alttag ? abs(TEXTW(tags[i]) - TEXTW(tagsalt[i])) / 2 : 0;
+		/* do not draw vacant tags */
+		if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+		continue;
+
+		if (!selmon->alttag) {
+			if (masterclientontag[i])
+				snprintf(tagdisp, 64, ptagf, tags[i], masterclientontag[i]);
+			else
+				snprintf(tagdisp, 64, etagf, tags[i]);
+			masterclientontag[i] = tagdisp;
+			tagw[i] = w = TEXTW(masterclientontag[i]);
+		} else {
+			if (altmasterclientontag[i])
+				snprintf(alttagdisp, 64, altptagf, tagsalt[i], altmasterclientontag[i]);
+			else
+				snprintf(alttagdisp, 64, altetagf, tagsalt[i]);
+			altmasterclientontag[i] = alttagdisp;
+			alttagw[i] = w = TEXTW(altmasterclientontag[i]);
+		}
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, wdelta + lrpad / 2, (selmon->alttag ? tagsalt[i] : tags[i]), urg & 1 << i);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, (selmon->alttag ? altmasterclientontag[i] : masterclientontag[i]), urg & 1 << i);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,

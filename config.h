@@ -20,8 +20,15 @@ static const char *colors[][3]      = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tagsalt[] = { "a", "b", "c", "d", "e", "6", "7", "8", "9" };
 static const int momentaryalttags = 0; /* 1 means alttags will show only when key is held down*/
+
+static const char ptagf[] = "[%s %s]";	/* format of a tag label */
+static const char etagf[] = "[%s]";	/* format of an empty tag */
+static const int lcaselbl = 0;		/* 1 means make tag label lowercase */	
+static const char altptagf[] = "%s %s";	/* format of a tag label */
+static const char altetagf[] = "%s";	/* format of an empty tag */
+static const int altlcaselbl = 1;		/* 1 means make tag label lowercase */	
 
 static const Rule rules[] = {
 	/* xprop(1):
