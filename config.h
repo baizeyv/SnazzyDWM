@@ -30,6 +30,7 @@ static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan  },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
@@ -95,8 +96,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_e,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_u,      focusstack,     {.i = -1 } },
+	{ MODKEY,                       XK_e,      focusstackvis,  {.i = +1 } },
+	{ MODKEY,                       XK_u,      focusstackvis,  {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_e,      focusstackhid,  {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_u,      focusstackhid,  {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_z,      show,           {0} },
+	{ MODKEY,                       XK_z,      hide,           {0} },
 	{ MODKEY,                       XK_a,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_s,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_n,      setmfact,       {.f = -0.05} },
@@ -136,6 +141,8 @@ static Button buttons[] = {
 	/* click                event mask      button          function        argument */
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+	{ ClkTopTitle,          0,              Button1,        hide,      {0} },
+	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button1,        sigstatusbar,   {.i = 1} },
 	{ ClkStatusText,        0,              Button2,        sigstatusbar,   {.i = 2} },
