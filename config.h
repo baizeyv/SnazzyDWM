@@ -143,6 +143,7 @@ static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY,                       XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       XK_o, shiftviewclients,    { .i = +1 } },
 	{ MODKEY|ShiftMask,		XK_h,      shiftboth,      { .i = -1 }	},
 	{ MODKEY|ControlMask,		XK_h,      shiftswaptags,  { .i = -1 }	},
