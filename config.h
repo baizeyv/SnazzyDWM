@@ -22,7 +22,7 @@ static const int extrabarright      = 0;        /* 1 means extra bar text on rig
 static const char statussep         = ';';      /* separator between status bars */
 static const double activeopacity   = 1.0f;     /* Window opacity when it's focused (0 <= opacity <= 1) */
 static const double inactiveopacity = 0.875f;   /* Window opacity when it's inactive (0 <= opacity <= 1) */
-static const int horizpadbar        = 10;        /* horizontal padding for statusbar */
+static const int horizpadbar        = 30;        /* horizontal padding for statusbar */
 static const int vertpadbar         = 10;        /* vertical padding for statusbar */
 static const char *fonts[]          = { "monospace:size=10", "Fontawesome:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
