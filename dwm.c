@@ -559,7 +559,22 @@ buttonpress(XEvent *e)
 	}
 	if (ev->window == selmon->extrabarwin) {
 		if(extrabarright) {
-			if (ev->x > selmon->ww - statusew) {
+			if (ev->x <= selmon->ww - statusew) {
+				x = 0;
+				c = m->clients;
+
+				if (c) {
+					do {
+						if (!ISVISIBLE(c))
+							continue;
+						else
+							x += (1.0 / (double)m->bt) * (m->ww - statusew);
+					} while (ev->x > x && (c = c->next));
+
+					click = ClkWinTitle;
+					arg.v = c;
+				}
+			} else {
 				x = selmon->ww - statusew;
 				click = ClkStatusText;
 				char *text, *s, ch;
@@ -584,21 +599,6 @@ buttonpress(XEvent *e)
 						text = s;
 						s--;
 					}
-				}
-			} else {
-				x = 0;
-				c = m->clients;
-
-				if (c) {
-					do {
-						if (!ISVISIBLE(c))
-							continue;
-						else
-							x += (1.0 / (double)m->bt) * (m->ww - statusew);
-					} while (ev->x > x && (c = c->next));
-
-					click = ClkWinTitle;
-					arg.v = c;
 				}
 			}
 		} else {
