@@ -587,7 +587,9 @@ applyrules(Client *c)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
-	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : c->mon->tagset[c->mon->seltags];
+	if(c->tags & TAGMASK)                    c->tags = c->tags & TAGMASK;
+	else if(c->mon->tagset[c->mon->seltags]) c->tags = c->mon->tagset[c->mon->seltags];
+	else                                     c->tags = 1;
 }
 
 int
@@ -1112,7 +1114,7 @@ createmon(void)
 	unsigned int i;
 
 	m = ecalloc(1, sizeof(Monitor));
-	m->tagset[0] = m->tagset[1] = 1;
+	m->tagset[0] = m->tagset[1] = startontag ? 1 : 0;
 	m->mfact = mfact;
 	m->nmaster = nmaster;
 	m->showbar = showbar;
@@ -2927,7 +2929,7 @@ sendmon(Client *c, Monitor *m)
 	detach(c);
 	detachstack(c);
 	c->mon = m;
-	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
+	c->tags = (m->tagset[m->seltags] ? m->tagset[m->seltags] : 1);
 	attach(c);
 	attachstack(c);
 	focus(NULL);
@@ -3811,34 +3813,32 @@ toggleview(const Arg *arg)
 	unsigned int newtagset = selmon->tagset[selmon->seltags] ^ (arg->ui & TAGMASK);
 	int i;
 
-	if (newtagset) {
-		prevmon = NULL;
-		switchtag();
-		selmon->tagset[selmon->seltags] = newtagset;
-		if (newtagset == ~0) {
-			selmon->pertag->prevtag = selmon->pertag->curtag;
-			selmon->pertag->curtag = 0;
-		}
-
-		/* test if the user did not select the same tag */
-		if (!(newtagset & 1 << (selmon->pertag->curtag - 1))) {
-			selmon->pertag->prevtag = selmon->pertag->curtag;
-			for (i = 0; !(newtagset & 1 << i); i++) ;
-			selmon->pertag->curtag = i + 1;
-		}
-
-		/* apply settings for this view */
-		selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag];
-		selmon->mfact = selmon->pertag->mfacts[selmon->pertag->curtag];
-		selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag];
-		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
-		selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
-
-		if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
-			togglebar(NULL);
-		focus(NULL);
-		arrange(selmon);
+	prevmon = NULL;
+	switchtag();
+	selmon->tagset[selmon->seltags] = newtagset;
+	if (newtagset == ~0) {
+		selmon->pertag->prevtag = selmon->pertag->curtag;
+		selmon->pertag->curtag = 0;
 	}
+
+	/* test if the user did not select the same tag */
+	if (!(newtagset & 1 << (selmon->pertag->curtag - 1))) {
+		selmon->pertag->prevtag = selmon->pertag->curtag;
+		for (i = 0; !(newtagset & 1 << i); i++) ;
+		selmon->pertag->curtag = i + 1;
+	}
+
+	/* apply settings for this view */
+	selmon->nmaster = selmon->pertag->nmasters[selmon->pertag->curtag];
+	selmon->mfact = selmon->pertag->mfacts[selmon->pertag->curtag];
+	selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag];
+	selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt];
+	selmon->lt[selmon->sellt^1] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt^1];
+
+	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
+		togglebar(NULL);
+	focus(NULL);
+	arrange(selmon);
 }
 
 void
@@ -4402,7 +4402,7 @@ view(const Arg *arg)
 	int i;
 	unsigned int tmptag;
 
-	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
+	if(arg->ui && (arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
 		return;
 	prevmon = NULL;
 	switchtag();
