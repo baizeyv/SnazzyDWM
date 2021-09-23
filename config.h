@@ -133,6 +133,14 @@ static const char *termcmd[]  = { "st", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY,                       XK_o, shiftviewclients,    { .i = +1 } },
+	{ MODKEY|ShiftMask,		XK_h,      shiftboth,      { .i = -1 }	},
+	{ MODKEY|ControlMask,		XK_h,      shiftswaptags,  { .i = -1 }	},
+	{ MODKEY|ControlMask,		XK_l,      shiftswaptags,  { .i = +1 }	},
+	{ MODKEY|ShiftMask,             XK_l,      shiftboth,      { .i = +1 }	},
+	{ MODKEY|ShiftMask,             XK_o,	shiftview,         { .i = +1 } },
+	{ MODKEY|ShiftMask,             XK_i,	shiftview,         { .i = -1 } },
+	{ MODKEY,	                XK_i, shiftviewclients,    { .i = -1 } },
 	{ MODKEY,                       XK_k,      swalstopsel,    {0} },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
