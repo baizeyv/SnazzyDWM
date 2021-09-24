@@ -152,6 +152,7 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY|ControlMask,-1,           XK_space,  focusmaster,    {0} },
 	{ MODKEY,-1,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       -1,XK_minus, scratchpad_show, {0} },
 	{ MODKEY|ShiftMask,             -1,XK_minus, scratchpad_hide, {0} },
