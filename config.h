@@ -153,6 +153,22 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY,                       -1,XK_Down,   moveresize,     {.v = "0x 25y 0w 0h" } },
+	{ MODKEY,                       -1,XK_Up,     moveresize,     {.v = "0x -25y 0w 0h" } },
+	{ MODKEY,                       -1,XK_Right,  moveresize,     {.v = "25x 0y 0w 0h" } },
+	{ MODKEY,                       -1,XK_Left,   moveresize,     {.v = "-25x 0y 0w 0h" } },
+	{ MODKEY|ShiftMask,             -1,XK_Down,   moveresize,     {.v = "0x 0y 0w 25h" } },
+	{ MODKEY|ShiftMask,             -1,XK_Up,     moveresize,     {.v = "0x 0y 0w -25h" } },
+	{ MODKEY|ShiftMask,             -1,XK_Right,  moveresize,     {.v = "0x 0y 25w 0h" } },
+	{ MODKEY|ShiftMask,             -1,XK_Left,   moveresize,     {.v = "0x 0y -25w 0h" } },
+	{ MODKEY|ControlMask,           -1,XK_Up,     moveresizeedge, {.v = "t"} },
+	{ MODKEY|ControlMask,           -1,XK_Down,   moveresizeedge, {.v = "b"} },
+	{ MODKEY|ControlMask,           -1,XK_Left,   moveresizeedge, {.v = "l"} },
+	{ MODKEY|ControlMask,           -1,XK_Right,  moveresizeedge, {.v = "r"} },
+	{ MODKEY|ControlMask|ShiftMask, -1,XK_Up,     moveresizeedge, {.v = "T"} },
+	{ MODKEY|ControlMask|ShiftMask, -1,XK_Down,   moveresizeedge, {.v = "B"} },
+	{ MODKEY|ControlMask|ShiftMask, -1,XK_Left,   moveresizeedge, {.v = "L"} },
+	{ MODKEY|ControlMask|ShiftMask, -1,XK_Right,  moveresizeedge, {.v = "R"} },
 	{ MODKEY|ControlMask,-1,           XK_space,  focusmaster,    {0} },
 	{ MODKEY,-1,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       -1,XK_minus, scratchpad_show, {0} },
