@@ -190,6 +190,7 @@ typedef struct {
     	int canfocus;
 	int floatx, floaty, floatw, floath;
 	int floatborderpx;
+	int unmanaged;
 } Rule;
 
 typedef struct Systray   Systray;
@@ -461,6 +462,7 @@ static pid_t statuspid = -1;
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
+static int unmanaged = 0;    /* whether the window manager should manage the new window or not */
 static int lrpad;            /* sum of left and right padding for text */
 static int vp;               /* vertical padding for bar */
 static int sp;               /* side padding for bar */
@@ -635,6 +637,7 @@ applyrules(Client *c)
 				if (r->floatw >= 0) c->w = r->floatw;
 				if (r->floath >= 0) c->h = r->floath;
 			}
+			unmanaged = r->unmanaged;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
@@ -2438,6 +2441,17 @@ manage(Window w, XWindowAttributes *wa)
 	} else {
 		c->mon = selmon;
 		applyrules(c);
+	}
+
+	if (unmanaged) {
+		XMapWindow(dpy, c->win);
+		if (unmanaged == 1)
+			XRaiseWindow(dpy, c->win);
+		else if (unmanaged == 2)
+			XLowerWindow(dpy, c->win);
+		free(c);
+		unmanaged = 0;
+		return;
 	}
 
 	if (c->x + WIDTH(c) > c->mon->mx + c->mon->mw)

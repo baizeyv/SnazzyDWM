@@ -105,10 +105,17 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5  },
-	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5  },
-	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1 },
+	/* unmanaged  'conky can use this'
+	As such the value of the unmanged rule plays a part:
+   	* 0 - the window is managed by the window manager
+   	* 1 - the window will be placed above all other windows
+   	* 2 - the window will be placed below all other windows
+   	* 3 - the window is left as-is (neither lowered nor raised)
+   	*/
+	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx		unmanaged */
+	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5,	0  },
+	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5,	0  },
+	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1,	0 },
 };
 
 /* window swallowing */
