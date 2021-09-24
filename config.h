@@ -112,10 +112,18 @@ static const Rule rules[] = {
    	* 2 - the window will be placed below all other windows
    	* 3 - the window is left as-is (neither lowered nor raised)
    	*/
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx		unmanaged */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5,	0  },
-	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5,	0  },
-	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1,	0 },
+	/* switchtag
+	This patch adds an extra configuration option for individual rules where:
+	   - 0 is default behaviour
+	   - 1 automatically moves you to the tag of the newly opened application and
+	   - 2 enables the tag of the newly opened application in addition to your existing enabled tags
+	   - 3 as 1, but closing that window reverts the view back to what it was previously (*)
+	   - 4 as 2, but closing that window reverts the view back to what it was previously (*)
+	   */
+	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx		unmanaged	switchtag */
+	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5,	0,	0  },
+	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5,	0,	3  },
+	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1,	0,	0 },
 };
 
 /* window swallowing */
