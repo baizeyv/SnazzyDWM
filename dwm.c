@@ -380,6 +380,7 @@ static void swalstopsel(const Arg *unused);
 static void switchtag(void);
 static Monitor *systraytomon(Monitor *m);
 static void tag(const Arg *arg);
+static void tagto(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void togglealttag();
 static void togglebar(const Arg *arg);
@@ -4896,6 +4897,20 @@ tag(const Arg *arg)
 			selmon->sel->switchtag = 0;
 		focus(NULL);
 		arrange(selmon);
+	}
+}
+
+void
+tagto(const Arg *arg)
+{
+	if (selmon->sel && arg->ui & TAGMASK) {
+		selmon->sel->tags = arg->ui & TAGMASK;
+		if (selmon->sel->switchtag)
+			selmon->sel->switchtag = 0;
+		focus(NULL);
+		arrange(selmon);
+		if(viewontag && ((arg->ui & TAGMASK) != TAGMASK))
+			view(arg);
 	}
 }
 
