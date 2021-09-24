@@ -357,6 +357,7 @@ static void togglealttag();
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglecanfocusfloating(const Arg *arg);
+static void togglefloatcenter(const Arg *arg);
 static void togglemark(const Arg *arg);
 static void togglescratch(const Arg *arg);
 static void togglealwaysontop(const Arg *arg);
@@ -440,6 +441,7 @@ static int enablegaps = 1;
 #endif // PERTAG_PATCH
 
 /* variables */
+static int newx = 0, newy = 0, tmpx = 0, tmpy = 0;
 static int swflag = 0;
 static Client *prevzoom = NULL;
 static Systray *systray =  NULL;
@@ -4388,6 +4390,29 @@ togglecanfocusfloating(const Arg *arg)
     }
   }
 
+	arrange(selmon);
+}
+
+void
+togglefloatcenter(const Arg *arg)
+{
+	if (!selmon->sel)
+		return;
+	if (selmon->sel->isfullscreen) /* no support for fullscreen windows */
+		return;
+	if (selmon->sel->isfloating) {
+		newx = selmon->sel->mon->mx + (selmon->sel->mon->mw - WIDTH(selmon->sel)) / 2;
+		newy = selmon->sel->mon->my + (selmon->sel->mon->mh - HEIGHT(selmon->sel)) / 2;
+		if (selmon->sel->x == newx && selmon->sel->y == newy){
+			selmon->sel->x = tmpx;
+			selmon->sel->y = tmpy;
+		} else {
+			tmpx = selmon->sel->x;
+			tmpy = selmon->sel->y;
+			selmon->sel->x = newx;
+			selmon->sel->y = newy;
+		}
+	}
 	arrange(selmon);
 }
 
