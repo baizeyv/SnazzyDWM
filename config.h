@@ -328,6 +328,8 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           -1,XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       -1,XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             -1,XK_space,  togglefloating, {0} },
+	{ Mod4Mask,                       -1,XK_f,      togglefullscreen, {0} },
+	{ Mod4Mask|ControlMask,             -1,XK_f,      togglefakefullscreen, {0} },
 	{ MODKEY,                       -1,XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             -1,XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       -1,XK_comma,  focusmon,       {.i = -1 } },
