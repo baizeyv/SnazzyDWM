@@ -238,6 +238,7 @@ static void detachstack(Client *c);
 static Monitor *dirtomon(int dir);
 static void drawbar(Monitor *m);
 static void drawbars(void);
+static void distributetags(const Arg *arg);
 static int drawstatusbar(Monitor *m, int bh, char* text, int extra);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
@@ -287,6 +288,7 @@ static void pushdown(const Arg *arg);
 static void pushup(const Arg *arg);
 static void quit(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
+static void reorganizetags(const Arg *arg);
 static void removesystrayicon(Client *i);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
 static void resizebarwin(Monitor *m);
@@ -1233,6 +1235,33 @@ detach(Client *c)
 }
 
 void
+reorganizetags(const Arg *arg) {
+	Client *c;
+	unsigned int occ, unocc, i;
+	unsigned int tagdest[LENGTH(tags)];
+
+	occ = 0;
+	for (c = selmon->clients; c; c = c->next)
+		occ |= (1 << (ffs(c->tags)-1));
+	unocc = 0;
+	for (i = 0; i < LENGTH(tags); ++i) {
+		while (unocc < i && (occ & (1 << unocc)))
+			unocc++;
+		if (occ & (1 << i)) {
+			tagdest[i] = unocc;
+			occ &= ~(1 << i);
+			occ |= 1 << unocc;
+		}
+	}
+
+	for (c = selmon->clients; c; c = c->next)
+		c->tags = 1 << tagdest[ffs(c->tags)-1];
+	if (selmon->sel)
+		selmon->tagset[selmon->seltags] = selmon->sel->tags;
+	arrange(selmon);
+}
+
+void
 detachstack(Client *c)
 {
 	Client **tc, *t;
@@ -1551,6 +1580,19 @@ drawbars(void)
 
 	for (m = mons; m; m = m->next)
 		drawbar(m);
+}
+
+void
+distributetags(const Arg *arg)
+{
+        unsigned int ui = 1;
+        int i = 0;
+        for (Client *c = selmon->clients; c; c = c->next) {
+                c->tags = (ui << i) & TAGMASK;
+                i = (i + 1) % LENGTH(tags);
+        }
+        focus(NULL);
+        arrange(selmon);
 }
 
 void

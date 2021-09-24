@@ -153,6 +153,8 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY|ShiftMask,-1, XK_t, distributetags, {0} },
+	{ MODKEY,-1,                       XK_r,      reorganizetags, {0} },
 	{ MODKEY,                       -1,XK_Down,   moveresize,     {.v = "0x 25y 0w 0h" } },
 	{ MODKEY,                       -1,XK_Up,     moveresize,     {.v = "0x -25y 0w 0h" } },
 	{ MODKEY,                       -1,XK_Right,  moveresize,     {.v = "25x 0y 0w 0h" } },
