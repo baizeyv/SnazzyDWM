@@ -16,6 +16,19 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+/*  Display modes of the tab bar: never shown, always shown, shown only in  */
+/*  monocle mode in the presence of several windows.                        */
+/*  Modes after showtab_nmodes are disabled.                                */
+enum showtab_modes { showtab_never, showtab_auto, showtab_nmodes, showtab_always};
+static const int showtab			= showtab_auto;        /* Default tab bar show mode */
+static const int toptab				= True;               /* False means bottom tab bar */
+static const int tabclientgap	= 5;
+static const char *btn_prev = "";
+static const char *btn_next = "";
+static const char *btn_close = "";
+static const char *tabstatus = "TAB STATUS! --BAIZEYV";
+static const int tabstatuscenter = 1;
+
 /*
 0 - master (default behaviour): new windows become the new master
 1 - attachabove: new window is placed above selected client
@@ -30,7 +43,7 @@ static const int user_bh            = 30;        /* 0 means that dwm will calcul
 #define ICONSPACING 5 /* space between icon and title */
 static const int vertpad            = 10;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
-static const int extrabarright      = 0;        /* 1 means extra bar text on right */
+static const int extrabarright      = 1;        /* 1 means extra bar text on right */
 static const char statussep         = ';';      /* separator between status bars */
 static const double activeopacity   = 1.0f;     /* Window opacity when it's focused (0 <= opacity <= 1) */
 static const double inactiveopacity = 0.875f;   /* Window opacity when it's inactive (0 <= opacity <= 1) */
@@ -45,6 +58,12 @@ static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char normmarkcolor[]   = "#775500";	/*border color for marked client*/
 static const char selmarkcolor[]    = "#775577";	/*border color for marked client on focus*/
+static const char closefgcolor[]       = "#eeeeee";
+static const char prevfgcolor[]       = "#eeeeee";
+static const char nextfgcolor[]       = "#bbbbbb";
+static const char closebgcolor[]       = "#37474F";
+static const char prevbgcolor[]       = "#37474F";
+static const char nextbgcolor[]       = "#222222";
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][4]      = {
@@ -52,11 +71,17 @@ static const char *colors[][4]      = {
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2,	normmarkcolor },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan,	selmarkcolor  },
 	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan,	normmarkcolor  },
+	[SchemeClose]  = { closefgcolor, closebgcolor,  col_gray2,	selmarkcolor  },
+	[SchemePrev]  = { prevfgcolor, prevbgcolor,  col_gray2,	selmarkcolor  },
+	[SchemeNext]  = { nextfgcolor, nextbgcolor,  col_gray2,	selmarkcolor  },
 };
 static const unsigned int alphas[][4]      = {
 	/*               fg      bg        border	mark     */
 	[SchemeNorm] = { OPAQUE, baralpha, borderalpha,borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha,borderalpha },
+	[SchemeClose]  = { OPAQUE, baralpha, borderalpha, borderalpha },
+	[SchemePrev]   = { OPAQUE, baralpha, borderalpha, borderalpha },
+	[SchemeNext]   = { OPAQUE, baralpha, borderalpha, borderalpha },
 };
 static const XPoint stickyicon[]    = { {0,0}, {4,0}, {4,8}, {2,6}, {0,8}, {0,0} }; /* represents the icon as an array of vertices */
 static const XPoint stickyiconbb    = {4,8};	/* defines the bottom right corner of the polygon's bounding box (speeds up scaling) */
@@ -193,13 +218,14 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *layoutmenu_cmd = "layoutmenu.sh";
+static const char *layoutmenu_cmd = "~/tmp/dwm7/layoutmenu.sh";
 
 /*First arg only serves to match against key in rules*/
 static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL}; 
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY,XK_t,                       XK_w,      tabmode,        {-1} },
     { Mod4Mask,           -1,XK_Tab,     toggleattachx,      {0} },
     { MODKEY|ControlMask,           -1,XK_Up,     switchtags,      { .ui = SWITCHTAG_UP     | SWITCHTAG_VIEW } },
     { MODKEY|ControlMask,           -1,XK_Down,   switchtags,      { .ui = SWITCHTAG_DOWN   | SWITCHTAG_VIEW } },
@@ -356,6 +382,11 @@ static Button buttons[] = {
 	{ ClkClientWin,         MODKEY,         Button5,        resizemousescroll, {.v = &scrollargs[1]} },
 	{ ClkClientWin,         MODKEY,         Button6,        resizemousescroll, {.v = &scrollargs[2]} },
 	{ ClkClientWin,         MODKEY,         Button7,        resizemousescroll, {.v = &scrollargs[3]} },
+	{ ClkTabBar,            0,              Button1,        focuswin,       {0} },
+	{ ClkTabClose,            0,              Button1,        killclient,       {0} },
+	{ ClkTabNext,            0,              Button1,        focusstackvis,       {.i=+1} },
+	{ ClkTabPrev,            0,              Button1,        focusstackvis,       {.i=-1} },
+	{ ClkTabEmpty,            0,              Button1,        togglebar,       {0} },
 };
 
 /* signal definitions */
