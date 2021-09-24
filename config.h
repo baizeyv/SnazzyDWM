@@ -128,10 +128,10 @@ static const Rule rules[] = {
 	   - 3 as 1, but closing that window reverts the view back to what it was previously (*)
 	   - 4 as 2, but closing that window reverts the view back to what it was previously (*)
 	   */
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx		unmanaged	switchtag */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5,	0,	0  },
-	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5,	0,	3  },
-	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1,	0,	0 },
+	/* class	role      instance    title       tags mask     isfloating   monitor    scratch key		canfocus	float x,y,w,h		floatborderpx		unmanaged	switchtag */
+	{ "Gimp",	NULL,     NULL,       NULL,       0,            1,           -1,        0,	1,	50,50,500,500,	5,	0,	0  },
+	{ "firefox",	"browser",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1,50,50,500,500,	5,	0,	3  },
+	{ NULL,		NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1,50,50,500,500,	-1,	0,	0 },
 };
 
 /* window swallowing */
