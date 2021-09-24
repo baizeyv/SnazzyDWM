@@ -131,7 +131,7 @@ static const int ulineall 		= 0;	/* 1 to show underline on all tags, 0 for just 
 #define SWITCHTAG_TOGGLEVIEW        1 << 7
 
 static const unsigned int drawtagmask = DRAWTAGGRID; /* | DRAWCLASSICTAGS to show classic row of tags */
-static const int tagrows = 2;
+static const int tagrows = 3;
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -328,7 +328,6 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           -1,XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       -1,XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             -1,XK_space,  togglefloating, {0} },
-	{ MODKEY|ShiftMask,             -1,XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       -1,XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             -1,XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       -1,XK_comma,  focusmon,       {.i = -1 } },
