@@ -226,6 +226,15 @@ struct Swallow {
 	Swallow *next;
 };
 
+typedef struct {
+	int monitor;
+	int layout;
+	float mfact;
+	int nmaster;
+	int showbar;
+	int topbar;
+} MonitorRule;
+
 /* function declarations */
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
@@ -1269,8 +1278,10 @@ configurerequest(XEvent *e)
 Monitor *
 createmon(void)
 {
-	Monitor *m;
 	unsigned int i;
+	Monitor *m, *mon;
+	unsigned int mi, j;
+	const MonitorRule *mr;
 
 	m = ecalloc(1, sizeof(Monitor));
 	m->tagset[0] = m->tagset[1] = startontag ? 1 : 0;
@@ -1283,9 +1294,25 @@ createmon(void)
 	m->gappiv = gappiv;
 	m->gappoh = gappoh;
 	m->gappov = gappov;
-	m->lt[0] = &layouts[0];
-	m->lt[1] = &layouts[1 % LENGTH(layouts)];
-	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
+	for (mi = 0, mon = mons; mon; mon = mon->next, mi++);
+	for (j = 0; j < LENGTH(monrules); j++) {
+		mr = &monrules[j];
+		if ((mr->monitor == -1 || mr->monitor == mi)) {
+			m->lt[0] = &layouts[mr->layout];
+			m->lt[1] = &layouts[1 % LENGTH(layouts)];
+			strncpy(m->ltsymbol, layouts[mr->layout].symbol, sizeof m->ltsymbol);
+
+			if (mr->mfact > -1)
+				m->mfact = mr->mfact;
+			if (mr->nmaster > -1)
+				m->nmaster = mr->nmaster;
+			if (mr->showbar > -1)
+				m->showbar = mr->showbar;
+			if (mr->topbar > -1)
+				m->topbar = mr->topbar;
+			break;
+		}
+	}
 	m->pertag = ecalloc(1, sizeof(Pertag));
 	m->pertag->curtag = m->pertag->prevtag = 1;
 
