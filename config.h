@@ -16,6 +16,14 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+/*
+0 - master (default behaviour): new windows become the new master
+1 - attachabove: new window is placed above selected client
+2 - attachaside: new window is placed on top of the stack
+3 - attachbelow: new window is placed below selected client
+4 - attachbottom: new window is placed at the bottom of the stack
+*/
+static int attachmode         = 3;        /* 0 master (default), 1 = above, 2 = aside, 3 = below, 4 = bottom */
 static const int startontag         = 0;        /* 0 means no tag active on start */
 static const int user_bh            = 30;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 #define ICONSIZE 16   /* icon size */
@@ -186,6 +194,7 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+    { Mod4Mask,           -1,XK_Tab,     toggleattachx,      {0} },
     { MODKEY|ControlMask,           -1,XK_Up,     switchtags,      { .ui = SWITCHTAG_UP     | SWITCHTAG_VIEW } },
     { MODKEY|ControlMask,           -1,XK_Down,   switchtags,      { .ui = SWITCHTAG_DOWN   | SWITCHTAG_VIEW } },
     { MODKEY|ControlMask,           -1,XK_Right,  switchtags,      { .ui = SWITCHTAG_RIGHT  | SWITCHTAG_VIEW } },
@@ -233,7 +242,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             -1,XK_space,  togglealwaysontop, {0} },
 	{ MODKEY|ControlMask,           -1,XK_j,      pushdown,       {0} },
 	{ MODKEY|ControlMask,           -1,XK_k,      pushup,         {0} },
-	{ MODKEY,                       -1,XK_s,      togglesticky,   {0} },
+	{ MODKEY,                       XK_j,XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       -1,XK_o, shiftviewclients,    { .i = +1 } },
 	{ MODKEY|ShiftMask,		-1,XK_h,      shiftboth,      { .i = -1 }	},
 	{ MODKEY|ControlMask,		-1,XK_h,      shiftswaptags,  { .i = -1 }	},
