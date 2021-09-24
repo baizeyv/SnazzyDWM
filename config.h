@@ -228,6 +228,8 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ MODKEY|ShiftMask,XK_d,             XK_j,      aspectresize,   {.i = +24} },
+	{ MODKEY|ShiftMask,XK_d,             XK_k,      aspectresize,   {.i = -24} },
 	{ MODKEY,XK_t,                       XK_w,      tabmode,        {-1} },
     { Mod4Mask,           -1,XK_Tab,     toggleattachx,      {0} },
     { MODKEY|ControlMask,           -1,XK_Up,     switchtags,      { .ui = SWITCHTAG_UP     | SWITCHTAG_VIEW } },
