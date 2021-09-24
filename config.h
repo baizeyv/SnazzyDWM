@@ -89,10 +89,10 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor    scratch key */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0  },
-	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0  },
-	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's' },
+	/* class      instance    title       tags mask     isfloating   monitor    scratch key		canfocus */
+	{ "Gimp",     NULL,       NULL,       0,            1,           -1,        0,	1  },
+	{ "firefox",  NULL,       NULL,       1 << 8,       0,           -1,        0,	1  },
+	{ NULL,       NULL,   "scratchpad",   0,            1,           -1,       's',	1 },
 };
 
 /* window swallowing */

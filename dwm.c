@@ -117,7 +117,7 @@ struct TagState {
 
 typedef struct ClientState ClientState;
 struct ClientState {
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, iscentered, isalwaysontop;
+	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, iscentered, isalwaysontop, canfocus;
 };
 
 typedef union {
@@ -147,7 +147,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
 	unsigned int tags;
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, iscentered, isalwaysontop;
+	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, iscentered, isalwaysontop, canfocus;
 	char scratchkey;
 	unsigned int icw, ich; Picture icon;
 	Client *next;
@@ -183,6 +183,7 @@ typedef struct {
 	const char *title;
 	unsigned int tags;
 	int isfloating;
+    int canfocus;
 	int monitor;
 	const char scratchkey;
 } Rule;
@@ -433,6 +434,7 @@ static int enablegaps = 1;
 #endif // PERTAG_PATCH
 
 /* variables */
+static int swflag = 0;
 static Client *prevzoom = NULL;
 static Systray *systray =  NULL;
 static const char autostartblocksh[] = "autostart_blocking.sh";
@@ -596,6 +598,7 @@ applyrules(Client *c)
 
 	/* rule matching */
 	c->isfloating = 0;
+    c->canfocus = 1;
 	c->tags = 0;
 	c->scratchkey = 0;
 	XGetClassHint(dpy, c->win, &ch);
@@ -609,6 +612,7 @@ applyrules(Client *c)
 		&& (!r->instance || strstr(instance, r->instance)))
 		{
 			c->isfloating = r->isfloating;
+            c->canfocus = r->canfocus;
 			c->tags |= r->tags;
 			c->scratchkey = r->scratchkey;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
@@ -1742,6 +1746,8 @@ focus(Client *c)
 		}
 	}
 	if (c) {
+		if (!c->canfocus)
+		    return;
 		if (c->mon != selmon) {
 			prevmon = selmon;
 			selmon = c->mon;
@@ -1843,22 +1849,22 @@ focusstack(int inc, int hid)
 	if (inc > 0) {
 		if (selmon->sel)
 			for (c = selmon->sel->next;
-					 c && (!ISVISIBLE(c) || (!hid && HIDDEN(c)));
+					 c && (!ISVISIBLE(c) || (!hid && HIDDEN(c)) || !c->canfocus);
 					 c = c->next);
 		if (!c)
 			for (c = selmon->clients;
-					 c && (!ISVISIBLE(c) || (!hid && HIDDEN(c)));
+					 c && (!ISVISIBLE(c) || (!hid && HIDDEN(c)) || !c->canfocus);
 					 c = c->next);
 	} else {
 		if (selmon->sel) {
 			for (i = selmon->clients; i != selmon->sel; i = i->next)
-				if (ISVISIBLE(i) && !(!hid && HIDDEN(i)))
+				if (ISVISIBLE(i) && !(!hid && HIDDEN(i)) && i->canfocus)
 					c = i;
 		} else
 			c = selmon->clients;
 		if (!c)
 			for (; i; i = i->next)
-				if (ISVISIBLE(i) && !(!hid && HIDDEN(i)))
+				if (ISVISIBLE(i) && !(!hid && HIDDEN(i)) && i->canfocus)
 					c = i;
 	}
 	if (c) {
@@ -3867,6 +3873,13 @@ swal(Client *swer, Client *swee, int manage)
 
 	/* Configure geometry params obtained from patches (e.g. cfacts) here. */
 	swee->cfact = swer->cfact;
+	if(swer->canfocus == 0 && swee->canfocus == 1)
+		swee->canfocus = 1;
+	else if(swer->canfocus == 0 && swee->canfocus == 0) {
+		swee->canfocus = 1;
+		swflag = 1;
+	} else
+		swee->canfocus = swer->canfocus;
 
 	/* ICCCM 4.1.3.1 */
 	setclientstate(swer, WithdrawnState);
@@ -4116,6 +4129,17 @@ swalstop(Client *swee, Client *root)
 
 	/* Configure geometry params obtained from patches (e.g. cfacts) here. */
 	swer->cfact = 1.0;
+	if(swer->canfocus == 0 && swee->canfocus == 1) {
+		swer->canfocus = 0;
+		swee->canfocus = swflag ? 0 : 1;
+		swflag = 0;
+	} else if(swer->canfocus == 1 && swee->canfocus == 1) {
+		swer->canfocus = 1;
+		swee->canfocus = 1;
+	} else if(swer->canfocus == 0 && swee->canfocus == 0) {
+		swer->canfocus = 0;
+		swee->canfocus = 0;
+	}
 
 	/* If swer is not in tiling mode reuse swee's geometry. */
 	if (swer->isfloating || !root->mon->lt[root->mon->sellt]->arrange) {
