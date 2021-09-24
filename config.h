@@ -155,6 +155,7 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+  { MODKEY,-1,                       XK_s,      togglecanfocusfloating,   {0} },
 	{ MODKEY|ShiftMask,             -1,XK_j,      inplacerotate,  {.i = +1} },
 	{ MODKEY|ShiftMask,             -1,XK_k,      inplacerotate,  {.i = -1} },
 	{ MODKEY|ShiftMask,             -1,XK_h,      inplacerotate,  {.i = +2} },
