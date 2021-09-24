@@ -148,6 +148,8 @@ struct Client {
 	int bw, oldbw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, iscentered, isalwaysontop, canfocus, cantfocus;
+	int floatborderpx;
+	int hasfloatbw;
 	char scratchkey;
 	unsigned int icw, ich; Picture icon;
 	Client *next;
@@ -183,9 +185,11 @@ typedef struct {
 	const char *title;
 	unsigned int tags;
 	int isfloating;
-    int canfocus;
 	int monitor;
 	const char scratchkey;
+    	int canfocus;
+	int floatx, floaty, floatw, floath;
+	int floatborderpx;
 } Rule;
 
 typedef struct Systray   Systray;
@@ -600,9 +604,9 @@ applyrules(Client *c)
 
 	/* rule matching */
 	c->isfloating = 0;
-    c->canfocus = 1;
 	c->tags = 0;
 	c->scratchkey = 0;
+    	c->canfocus = 1;
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
 	instance = ch.res_name  ? ch.res_name  : broken;
@@ -614,9 +618,19 @@ applyrules(Client *c)
 		&& (!r->instance || strstr(instance, r->instance)))
 		{
 			c->isfloating = r->isfloating;
-            c->canfocus = r->canfocus;
 			c->tags |= r->tags;
 			c->scratchkey = r->scratchkey;
+            		c->canfocus = r->canfocus;
+			if (r->floatborderpx >= 0) {
+				c->floatborderpx = r->floatborderpx;
+				c->hasfloatbw = 1;
+			}
+			if (r->isfloating) {
+				if (r->floatx >= 0) c->x = c->mon->mx + r->floatx;
+				if (r->floaty >= 0) c->y = c->mon->my + r->floaty;
+				if (r->floatw >= 0) c->w = r->floatw;
+				if (r->floath >= 0) c->h = r->floath;
+			}
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
@@ -2945,7 +2959,10 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldy = c->y; c->y = wc.y = y;
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
-	wc.border_width = c->bw;
+	if (c->isfloating && c->hasfloatbw && !c->isfullscreen)
+		wc.border_width = c->floatborderpx;
+	else
+		wc.border_width = c->bw;
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
 	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
 	    && !c->isfullscreen && !c->isfloating
