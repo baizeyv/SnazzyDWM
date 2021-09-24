@@ -5399,6 +5399,12 @@ updatebarpos(Monitor *m)
 	} else {
 		m->ty = -th;
 	}
+	if(!(m->lt[m->sellt]->arrange == monocle)) {
+		m->wx += 0;
+		m->wy += gappoh;
+		m->ww -= 0 + 0;
+		m->wh -= 0 + gappoh * 2;
+	}
 }
 
 void
