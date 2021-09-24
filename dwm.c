@@ -384,6 +384,7 @@ static void tagmon(const Arg *arg);
 static void togglealttag();
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullscr(const Arg *arg);
 static void togglecanfocusfloating(const Arg *arg);
 static void togglefloatcenter(const Arg *arg);
 static void togglemark(const Arg *arg);
@@ -5033,6 +5034,13 @@ togglescratch(const Arg *arg)
 	} else{
 		spawnscratch(arg);
 	}
+}
+
+void
+togglefullscr(const Arg *arg)
+{
+  if(selmon->sel)
+    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 }
 
 void
