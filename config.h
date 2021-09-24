@@ -35,18 +35,20 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char normmarkcolor[]   = "#775500";	/*border color for marked client*/
+static const char selmarkcolor[]    = "#775577";	/*border color for marked client on focus*/
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
-static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
-	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan  },
+static const char *colors[][4]      = {
+	/*               fg         bg         border		mark   */
+	[SchemeNorm] = { col_gray3, col_gray1, col_gray2,	normmarkcolor },
+	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan,	selmarkcolor  },
+	[SchemeHid]  = { col_cyan,  col_gray1, col_cyan,	normmarkcolor  },
 };
-static const unsigned int alphas[][3]      = {
-	/*               fg      bg        border     */
-	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
-	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+static const unsigned int alphas[][4]      = {
+	/*               fg      bg        border	mark     */
+	[SchemeNorm] = { OPAQUE, baralpha, borderalpha,borderalpha },
+	[SchemeSel]  = { OPAQUE, baralpha, borderalpha,borderalpha },
 };
 static const XPoint stickyicon[]    = { {0,0}, {4,0}, {4,8}, {2,6}, {0,8}, {0,0} }; /* represents the icon as an array of vertices */
 static const XPoint stickyiconbb    = {4,8};	/* defines the bottom right corner of the polygon's bounding box (speeds up scaling) */
@@ -153,6 +155,9 @@ static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+    { MODKEY,                       -1,XK_semicolon, togglemark,   {0} },
+    { MODKEY,                       -1,XK_o,      swapfocus,      {0} },
+    { MODKEY,                       -1,XK_u,      swapclient,     {0} },
 	{ MODKEY|ShiftMask,             -1,XK_minus, 		setborderpx,    {.i = -1 } },
 	{ MODKEY|ShiftMask,             -1,XK_plus, 		setborderpx,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             -1,XK_numbersign, 	setborderpx,    {.i = 0 } },
