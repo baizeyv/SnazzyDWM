@@ -6152,22 +6152,24 @@ updatestatus(void)
 void
 updatesystrayicongeom(Client *i, int w, int h)
 {
+	int rh = bh - vertpadbar;
 	if (i) {
-		i->h = bh;
+		i->h = rh;
 		if (w == h)
-			i->w = bh;
-		else if (h == bh)
+			i->w = rh;
+		else if (h == rh)
 			i->w = w;
 		else
-			i->w = (int) ((float)bh * ((float)w / (float)h));
+			i->w = (int) ((float)rh * ((float)w / (float)h));
+		i->y += vertpadbar / 2;
 		applysizehints(i, &(i->x), &(i->y), &(i->w), &(i->h), False);
 		/* force icons into the systray dimensions if they don't want to */
-		if (i->h > bh) {
+		if (i->h > rh) {
 			if (i->w == i->h)
-				i->w = bh;
+				i->w = rh;
 			else
-				i->w = (int) ((float)bh * ((float)i->w / (float)i->h));
-			i->h = bh;
+				i->w = (int) ((float)rh * ((float)i->w / (float)i->h));
+			i->h = rh;
 		}
 	}
 }
@@ -6247,7 +6249,7 @@ updatesystray(void)
 		XMapRaised(dpy, i->win);
 		w += systrayspacing;
 		i->x = w;
-		XMoveResizeWindow(dpy, i->win, i->x, 0, i->w, i->h);
+		XMoveResizeWindow(dpy, i->win, i->x, vertpadbar / 2, i->w, i->h);
 		w += i->w;
 		if (i->mon != m)
 			i->mon = m;
