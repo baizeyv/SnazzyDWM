@@ -6296,7 +6296,7 @@ updatepreview(void)
 		.event_mask = ButtonPressMask|ExposureMask
 	};
 	for (m = mons; m; m = m->next) {
-		m->tagwin = XCreateWindow(dpy, root, m->wx, m->by + bh, m->mw / scalepreview, m->mh / scalepreview, 0,
+		m->tagwin = XCreateWindow(dpy, root, m->wx + sp, (topbar ? m->by + bh + vp : m->by + vp - m->mh / scalepreview), m->mw / scalepreview, m->mh / scalepreview, 0,
 				DefaultDepth(dpy, screen), CopyFromParent, DefaultVisual(dpy, screen),
 				CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
 		XDefineCursor(dpy, m->tagwin, cursor[CurNormal]->cursor);
