@@ -416,6 +416,17 @@ static Button buttons[] = {
 	{ ClkTabNext,           0,              Button1,        focusstackvis,  {.i=+1} },
 	{ ClkTabPrev,           0,              Button1,        focusstackvis,  {.i=-1} },
 	{ ClkTabEmpty,          0,              Button1,        togglebar,      {0} },
+	/* placemouse options, choose which feels more natural:
+	 *    0 - tiled position is relative to mouse cursor
+	 *    1 - tiled postiion is relative to window center
+	 *    2 - mouse pointer warps to window center
+	 *
+	 * The moveorplace uses movemouse or placemouse depending on the floating state
+	 * of the selected client. Set up individual keybindings for the two if you want
+	 * to control these separately (i.e. to retain the feature to move a tiled window
+	 * into a floating position).
+	 */
+	{ ClkClientWin,         SUPER,         Button1,        moveorplace,    {.i = 1} },
 };
 
 /* signal definitions */
