@@ -27,9 +27,14 @@ IMLIB2LIBS = -lImlib2
 YAJLLIBS = -lyajl
 YAJLINC = /usr/include/yajl
 
+#KVMLIB = -lkvm
+
+# This is needed for the swallow patch
+XCBLIBS = -lX11-xcb -lxcb -lxcb-res
+
 # includes and libs
 INCS = -I${X11INC} -I${FREETYPEINC} -I${YAJLINC}
-LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXrender ${IMLIB2LIBS} ${YAJLLIBS}
+LIBS = -L${X11LIB} -lX11 ${XINERAMALIBS} ${FREETYPELIBS} -lXrender ${IMLIB2LIBS} ${YAJLLIBS} ${XCBLIBS} ${KVMLIB}
 
 # flags
 CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
