@@ -1075,7 +1075,8 @@ buttonpress(XEvent *e)
 		if(c && ev->x <= x && ev->x >= horizpadbar / 2) {
 			click = ClkTabBar;
 			arg.ui = i;
-		} else if(c && ev->x <= aftertabx - horizpadbar / 2) {
+		} else if(c && ev->x <= horizpadbar / 2) {
+		} else if(c && ev->x <= aftertabx - horizpadbar / 2 && ev->x >= x) {
 			click = ClkTabEmpty;
 		} else if(c && ev->x <= selmon->ww - horizpadbar - 2 - TEXTW2(btn_close) - TEXTW2(btn_next) - 2 * horizpadbar - TEXTW2(btn_prev) - horizpadbar && ev->x >= aftertabx - 2 - horizpadbar / 2) {
 			click = ClkLtSymbol;
