@@ -6789,6 +6789,7 @@ shifttagclients(const Arg *arg)
 			   | shifted.ui << (LENGTH(tags) + arg->i));
 		} while (tagmask && !(shifted.ui & tagmask));
 	tag(&shifted);
+	view(&shifted);
 }
 /* Navigate to the next/prev tag */
 void

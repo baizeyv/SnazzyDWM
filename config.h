@@ -257,6 +257,7 @@ static Key keys[] = {
 	/* modifier				chain key	key		function			argument		summary */
 	{ SUPER,		             	-1,		XK_Return, 	spawn,          		{.v = termcmd } }, /* terminal command */
 	{ ALT,		                       	-1,		XK_Return, 	zoom,           		{0} 		}, /* zoom command */
+	{ SUPER,	                       	-1,		XK_0,      	view,           		{.ui = ~0 } },
 	{ SUPER,	                       	-1,		XK_o,      	winview,        		{0} 		}, /* winview command */
 	{ SUPER,				-1,           	XK_space,  	focusmaster,    		{0} 		}, /* focus master command */
 	{ SUPER|SHIFT,	           		-1,		XK_e,      	pushdown,       		{0} 		}, /* push down command */
@@ -272,6 +273,9 @@ static Key keys[] = {
 	{ SUPER,	                       	-1,		XK_Tab,      	goback,         		{0} 		}, /* goback command */
 	{ ALT,		                       	-1,		XK_Tab,    	view,           		{0} },
 	{ SUPER,	                       	XK_semicolon,	XK_semicolon,   spawn,          		{.v = dmenucmd }}, /* dmenu command */
+	{ SUPER,                       		XK_semicolon,	XK_c, 		scratchpad_show, 		{0} 		},
+	{ SUPER,             			XK_semicolon,	XK_z, 		scratchpad_hide, 		{0} 		},
+	{ SUPER,                       		XK_semicolon,	XK_x, 		scratchpad_remove,		{0} 		},
 	{ SUPER,	             		XK_c,		XK_c,      	killclient,     		{0} 		}, /* kill command */
 	{ SUPER,	             		XK_c,		XK_x,      	killunsel,      		{0} 		}, /* kill unsel command */
 	{ SUPER,				XK_r,           XK_t,      	reorganizetags, 		{0} 		}, /* reorganize tags command */
@@ -294,6 +298,10 @@ static Key keys[] = {
 	{ SUPER,	             		XK_z,		XK_s,      	show,           		{0} 		}, /* show command */
 	{ SUPER,	                       	XK_z,		XK_z,      	hide,           		{0} 		}, /* hide command */
 	{ SUPER,	                       	XK_s,		XK_t,      	swalstopsel,    		{0} 		}, /* swal stop command */
+	{ SUPER,                       		XK_a,		XK_a,      	incnmaster,     		{.i = +1 } 	},
+	{ SUPER,                       		XK_a,		XK_s,      	incnmaster,     		{.i = -1 } 	},
+	{ ALT|CTRL,				-1,             XK_Right,      	aspectresize,   		{.i = +24} 	},
+	{ ALT|CTRL,				-1,             XK_Left,      	aspectresize,   		{.i = -24} 	},
 	{ ALT,		                       	-1,		XK_Down,   	moveresize,     		{.v = "0x 25y 0w 0h" }  }, /* move down */
 	{ ALT,		                       	-1,		XK_Up,     	moveresize,     		{.v = "0x -25y 0w 0h" } }, /* move up */
 	{ ALT,		                       	-1,		XK_Right,  	moveresize,     		{.v = "25x 0y 0w 0h" }  }, /* move right */
@@ -302,6 +310,14 @@ static Key keys[] = {
 	{ SUPER,             			-1,		XK_Up,     	moveresize,     		{.v = "0x 0y 0w -25h" } }, /* decrease height */
 	{ SUPER,             			-1,		XK_Right,  	moveresize,     		{.v = "0x 0y 25w 0h" } }, /* increase width */
 	{ SUPER,             			-1,		XK_Left,   	moveresize,     		{.v = "0x 0y -25w 0h" } }, /* decrease width */
+	{ ALT|SUPER,           			-1,		XK_Up,     	moveresizeedge, 		{.v = "t"} },
+	{ ALT|SUPER,           			-1,		XK_Down,   	moveresizeedge, 		{.v = "b"} },
+	{ ALT|SUPER,           			-1,		XK_Left,   	moveresizeedge, 		{.v = "l"} },
+	{ ALT|SUPER,           			-1,		XK_Right,  	moveresizeedge, 		{.v = "r"} },
+	{ SUPER|CTRL, 				-1,		XK_Up,     	moveresizeedge, 		{.v = "T"} },
+	{ SUPER|CTRL, 				-1,		XK_Down,   	moveresizeedge, 		{.v = "B"} },
+	{ SUPER|CTRL, 				-1,		XK_Left,   	moveresizeedge, 		{.v = "L"} },
+	{ SUPER|CTRL, 				-1,		XK_Right,  	moveresizeedge, 		{.v = "R"} },
 	{ SUPER,	                       	-1,		XK_e,      	focusstackvis,  		{.i = +1 } },
 	{ SUPER,	                       	-1,		XK_u,      	focusstackvis,  		{.i = -1 } },
 	{ ALT,                       		-1,		XK_comma,  	focusmon,       		{.i = -1 } },
@@ -327,52 +343,30 @@ static Key keys[] = {
     	{ ALT|SHIFT,              		-1,		XK_e,   	switchtags,     		{ .ui = SWITCHTAG_DOWN   | SWITCHTAG_TAG | SWITCHTAG_VIEW } },
 	{ SUPER|CTRL,             		-1,		XK_e,      	inplacerotate,  		{.i = +1} },
 	{ SUPER|CTRL,             		-1,		XK_u,      	inplacerotate,  		{.i = -1} },
-
-	/*
-    	//{ Mod4Mask,           			-1,		XK_i,  		switchtags,      		{ .ui = SWITCHTAG_RIGHT  | SWITCHTAG_VIEW } },
-    	//{ Mod4Mask,           			-1,		XK_n,   	switchtags,      		{ .ui = SWITCHTAG_LEFT   | SWITCHTAG_VIEW } },
-	{ Mod4Mask|ShiftMask,                       -1,XK_n, shifttag,    { .i = -1 } },
-	{ Mod4Mask|ShiftMask,                       -1,XK_i, shifttag,    { .i = +1 } },
-
-
-	{ MODKEY,				-1,             XK_Up,      	aspectresize,   		{.i = +24} 	},
-	{ MODKEY,				-1,             XK_Down,      	aspectresize,   		{.i = -24} 	},
-	{ MODKEY|ControlMask,           -1,XK_Up,     moveresizeedge, {.v = "t"} },
-	{ MODKEY|ControlMask,           -1,XK_Down,   moveresizeedge, {.v = "b"} },
-	{ MODKEY|ControlMask,           -1,XK_Left,   moveresizeedge, {.v = "l"} },
-	{ MODKEY|ControlMask,           -1,XK_Right,  moveresizeedge, {.v = "r"} },
-	{ MODKEY|ControlMask|ShiftMask, -1,XK_Up,     moveresizeedge, {.v = "T"} },
-	{ MODKEY|ControlMask|ShiftMask, -1,XK_Down,   moveresizeedge, {.v = "B"} },
-	{ MODKEY|ControlMask|ShiftMask, -1,XK_Left,   moveresizeedge, {.v = "L"} },
-	{ MODKEY|ControlMask|ShiftMask, -1,XK_Right,  moveresizeedge, {.v = "R"} },
-	{ MODKEY,                       -1,XK_minus, scratchpad_show, {0} },
-	{ MODKEY|ShiftMask,             -1,XK_minus, scratchpad_hide, {0} },
-	{ MODKEY,                       -1,XK_equal,scratchpad_remove,{0} },
-	{ MODKEY|ShiftMask,		-1,XK_h,      shiftboth,      { .i = -1 }	},
-	{ MODKEY|ControlMask,		-1,XK_h,      shiftswaptags,  { .i = -1 }	},
-	{ MODKEY|ControlMask,		-1,XK_l,      shiftswaptags,  { .i = +1 }	},
-	{ MODKEY|ShiftMask,             -1,XK_l,      shiftboth,      { .i = +1 }	},
-	{ MODKEY,                       -1,XK_a,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       -1,XK_s,      incnmaster,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_u,      incrgaps,       {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_u,      incrgaps,       {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_i,      incrigaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_i,      incrigaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_o,      incrogaps,      {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_o,      incrogaps,      {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_6,      incrihgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_6,      incrihgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_7,      incrivgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_7,      incrivgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_8,      incrohgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_8,      incrohgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_9,      incrovgaps,     {.i = +1 } },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_9,      incrovgaps,     {.i = -1 } },
-	{ MODKEY|Mod4Mask,              -1,XK_0,      togglegaps,     {0} },
-	{ MODKEY|Mod4Mask|ShiftMask,    -1,XK_0,      defaultgaps,    {0} },
-	{ MODKEY,                       -1,XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             -1,XK_0,      tag,            {.ui = ~0 } },
-	*/
+	{ ALT|SUPER,              		-1,		XK_0,      	togglegaps,     		{0} },
+	{ SUPER|CTRL,    			-1,		XK_0,      	defaultgaps,    		{0} },
+	{ ALT,              			-1,		XK_equal,      	incrgaps,       		{.i = +1 } },
+	{ ALT,    				-1,		XK_minus,      	incrgaps,       		{.i = -1 } },
+	{ SUPER,              			-1,		XK_equal,      	incrigaps,      		{.i = +1 } },
+	{ SUPER,    				-1,		XK_minus,      	incrigaps,      		{.i = -1 } },
+	{ ALT|SUPER,              		-1,		XK_equal,      	incrogaps,      		{.i = +1 } },
+	{ ALT|SUPER,    			-1,		XK_minus,      	incrogaps,      		{.i = -1 } },
+	{ SUPER|CTRL,              		-1,		XK_equal,      	incrihgaps,     		{.i = +1 } },
+	{ SUPER|CTRL,    			-1,		XK_minus,      	incrihgaps,     		{.i = -1 } },
+	{ ALT|CTRL,              		-1,		XK_equal,      	incrivgaps,     		{.i = +1 } },
+	{ ALT|CTRL,    				-1,		XK_minus,      	incrivgaps,     		{.i = -1 } },
+	{ ALT|SHIFT,              		-1,		XK_equal,      	incrohgaps,     		{.i = +1 } },
+	{ ALT|SHIFT,    			-1,		XK_minus,      	incrohgaps,     		{.i = -1 } },
+	{ SUPER|SHIFT,              		-1,		XK_equal,      	incrovgaps,     		{.i = +1 } },
+	{ SUPER|SHIFT,    			-1,		XK_minus,      	incrovgaps,     		{.i = -1 } },
+	{ ALT|SUPER|CTRL,			-1,		XK_n,      	shiftswaptags,  		{ .i = -1 }	},
+	{ ALT|SUPER|CTRL,			-1,		XK_i,      	shiftswaptags,  		{ .i = +1 }	},
+	{ SUPER|CTRL,                       	-1,		XK_n, 		shifttag,    			{ .i = -1 } },
+	{ SUPER|CTRL,                       	-1,		XK_i, 		shifttag,    			{ .i = +1 } },
+    	{ ALT|SUPER,           			-1,		XK_i,  		switchtags,      		{ .ui = SWITCHTAG_RIGHT  | SWITCHTAG_VIEW } },
+    	{ ALT|SUPER,           			-1,		XK_n,   	switchtags,      		{ .ui = SWITCHTAG_LEFT   | SWITCHTAG_VIEW } },
+	{ ALT|CTRL|SHIFT,			-1,		XK_n,      	shiftboth,      		{ .i = -1 }	},
+	{ ALT|CTRL|SHIFT,             		-1,		XK_i,      	shiftboth,      		{ .i = +1 }	},
 	TAGKEYS(                        -1,XK_1,                      0)
 	TAGKEYS(                        -1,XK_2,                      1)
 	TAGKEYS(                        -1,XK_3,                      2)
