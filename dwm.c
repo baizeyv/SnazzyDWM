@@ -312,7 +312,7 @@ static void moveresizeedge(const Arg *arg);
 static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void opacity(Client *c, double opacity);
-static void pop(Client *);
+//static void pop(Client *);
 static Client *prevtiled(Client *c);
 static void propertynotify(XEvent *e);
 static void pushdown(const Arg *arg);
@@ -431,8 +431,8 @@ static void shifttagclients(const Arg *arg);
 static void shiftview(const Arg *arg);
 static void shiftviewclients(const Arg *arg);
 static void shiftboth(const Arg *arg);
-static void swaptags(const Arg *arg);
 static void shiftswaptags(const Arg *arg);
+static void swaptags(const Arg *arg);
 
 /* Key binding functions */
 static void defaultgaps(const Arg *arg);
@@ -3287,6 +3287,7 @@ opacity(Client *c, double opacity)
 		XDeleteProperty(dpy, c->win, netatom[NetWMWindowsOpacity]);
 }
 
+/*
 void
 pop(Client *c)
 {
@@ -3300,6 +3301,7 @@ pop(Client *c)
 	focus(c);
 	arrange(c->mon);
 }
+*/
 
 Client *
 prevtiled(Client *c) {
@@ -6770,7 +6772,7 @@ shifttagclients(const Arg *arg)
 	shifted.ui = selmon->tagset[selmon->seltags];
 
 	for (c = selmon->clients; c; c = c->next)
-		if (!(c->tags))
+		if ((c->tags))
 			tagmask = tagmask | c->tags;
 
 
@@ -6809,7 +6811,7 @@ shiftviewclients(const Arg *arg)
 	shifted.ui = selmon->tagset[selmon->seltags];
 
 	for (c = selmon->clients; c; c = c->next)
-		if (!(c->tags))
+		if ((c->tags))
 			tagmask = tagmask | c->tags;
 
 
