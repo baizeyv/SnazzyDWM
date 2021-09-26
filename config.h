@@ -241,6 +241,8 @@ static const Layout layouts[] = {
 
 #define TAGKEYS(CHAIN,KEY,TAG) \
 	{ ALT,               	CHAIN,    KEY,      view,           {.ui = 1 << TAG} }, \
+	{ SUPER,               	CHAIN,    KEY,      comboview,           {.ui = 1 << TAG} }, \
+	{ SUPER|SHIFT,          CHAIN,    KEY,      combotag,           {.ui = 1 << TAG} }, \
 	{ ALT|CTRL,          	CHAIN,    KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ ALT|SHIFT,         	CHAIN,    KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ CTRL|SHIFT,        	CHAIN,    KEY,      tagto,          {.ui = 1 << TAG} }, \
