@@ -273,10 +273,10 @@ static Key keys[] = {
 	{ SUPER|SHIFT,	           		-1,		XK_e,      	pushdown,       		{0} 		}, /* push down command */
 	{ SUPER|SHIFT,	           		-1,		XK_u,      	pushup,         		{0} 		}, /* push up command */
 	{ ALT,					-1,             XK_grave,  	togglescratch,  		{.v = scratchpadcmd } }, /* scratch command */
-	{ ALT|CTRL,	                        -1,		XK_n,      	setmfact,       		{.f = -0.05} 	}, /* decrease mfact */
-	{ ALT|CTRL,	                        -1,		XK_i,      	setmfact,       		{.f = +0.05} 	}, /* increase mfact */
-	{ ALT|CTRL,		             	-1,		XK_u,      	setcfact,       		{.f = +0.25} 	}, /* increase cfact */
-	{ ALT|CTRL,		             	-1,		XK_e,      	setcfact,       		{.f = -0.25} 	}, /* decrease cfact */
+	{ ALT|CTRL,	                        -1,		XK_n,      	setmfact,       		{.f = -0.01} 	}, /* decrease mfact */
+	{ ALT|CTRL,	                        -1,		XK_i,      	setmfact,       		{.f = +0.01} 	}, /* increase mfact */
+	{ ALT|CTRL,		             	-1,		XK_u,      	setcfact,       		{.f = +0.01} 	}, /* increase cfact */
+	{ ALT|CTRL,		             	-1,		XK_e,      	setcfact,       		{.f = -0.01} 	}, /* decrease cfact */
 	{ ALT|CTRL,		             	-1,		XK_o,      	setcfact,       		{.f =  0.00} 	}, /* default cfact */
 	{ SUPER,				-1,		XK_comma,  	cyclelayout,    		{.i = -1 } 	}, /* previous layout */
 	{ SUPER,           			-1,		XK_period, 	cyclelayout,    		{.i = +1 } 	}, /* next layout */
