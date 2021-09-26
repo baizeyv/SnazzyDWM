@@ -374,8 +374,8 @@ static Key keys[] = {
     	{ ALT|SUPER,           			-1,		XK_n,   	switchtags,      		{ .ui = SWITCHTAG_LEFT   | SWITCHTAG_VIEW } },
 	{ ALT|CTRL|SHIFT,			-1,		XK_n,      	shiftboth,      		{ .i = -1 }	},
 	{ ALT|CTRL|SHIFT,             		-1,		XK_i,      	shiftboth,      		{ .i = +1 }	},
-	{ SUPER|SHIFT,				-1,           	XK_a, 		riospawn,       		{.v = termcmd } },
-	{ SUPER|SHIFT,				-1,             XK_r,      	rioresize,      		{0} },
+	{ ALT|CTRL,				-1,           	XK_a, 		riospawn,       		{.v = termcmd } },
+	{ ALT|CTRL,				-1,             XK_r,      	rioresize,      		{0} },
 	TAGKEYS(                        -1,XK_1,                      0)
 	TAGKEYS(                        -1,XK_2,                      1)
 	TAGKEYS(                        -1,XK_3,                      2)
