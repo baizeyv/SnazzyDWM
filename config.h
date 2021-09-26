@@ -117,6 +117,7 @@ static const XPoint stickyiconbb    = {4,8};	/* defines the bottom right corner 
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const int taglayouts[] = {1, 0, 2, 3, 4, 6, 5, 7, 8};
 static const char *tagsalt[] = { "a", "b", "c", "d", "e", "6", "7", "8", "9" };
 static const int momentaryalttags = 0; /* 1 means alttags will show only when key is held down*/
 static const char ptagf[] = "[%s %s]";	/* format of a tag label */
@@ -198,7 +199,7 @@ static const char swalsymbol[] = "👅";
 
 static const MonitorRule monrules[] = {
 	/* monitor layout  mfact  nmaster  showbar  topbar */
-	{  1,      2,      -1,    -1,      -1,      -1     }, // use a different layout for the second monitor
+	{  1,      0,      -1,    -1,      -1,      -1     }, // use a different layout for the second monitor
 	{  -1,     1,      -1,    -1,      -1,      -1     }, // default
 };
 
