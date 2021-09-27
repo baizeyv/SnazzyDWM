@@ -6217,6 +6217,7 @@ updatestatus(void)
 	if (!gettextprop(root, XA_WM_NAME, text, sizeof(text))) {
 		strcpy(stext, "dwm-"VERSION);
 		estext[0] = '\0';
+		strcpy(estext, "dwm-"VERSION);
 	} else {
 		char *e = strchr(text, statussep);
 		if (e) {
