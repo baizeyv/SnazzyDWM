@@ -54,6 +54,7 @@ static const int tabstatuscenter = 1;
 3 - attachbelow: new window is placed below selected client
 4 - attachbottom: new window is placed at the bottom of the stack
 */
+static int showattachmodestr = 1;
 static int attachmode         = 3;        /* 0 master (default), 1 = above, 2 = aside, 3 = below, 4 = bottom */
 
 static const int startontag         = 0;        /* 0 means no tag active on start */
@@ -102,6 +103,7 @@ static const char *colors[][4]      = {
 	[SchemeClose]  = { closefgcolor, closebgcolor,  col_gray2,	selmarkcolor  },
 	[SchemePrev]  = { prevfgcolor, prevbgcolor,  col_gray2,	selmarkcolor  },
 	[SchemeNext]  = { nextfgcolor, nextbgcolor,  col_gray2,	selmarkcolor  },
+	[SchemeAttach]  = { col_gray4, col_cyan,  col_cyan,	selmarkcolor  },
 };
 static const unsigned int alphas[][4]      = {
 	/*               fg      bg        border	mark     */
@@ -110,6 +112,7 @@ static const unsigned int alphas[][4]      = {
 	[SchemeClose]  = { OPAQUE, baralpha, borderalpha, borderalpha },
 	[SchemePrev]   = { OPAQUE, baralpha, borderalpha, borderalpha },
 	[SchemeNext]   = { OPAQUE, baralpha, borderalpha, borderalpha },
+	[SchemeAttach]  = { OPAQUE, baralpha, borderalpha,borderalpha },
 };
 
 static const XPoint stickyicon[]    = { {0,0}, {4,0}, {4,8}, {2,6}, {0,8}, {0,0} }; /* represents the icon as an array of vertices */
@@ -294,6 +297,7 @@ static Key keys[] = {
 	{ ALT|SHIFT, 				XK_q,		XK_r,      	quit,           		{1} 		}, /* restart command */
 	{ SUPER,	                       	XK_t,		XK_a,      	togglealttag,   		{0} 		}, /* alt tag command */
     	{ SUPER,           			XK_t,		XK_Tab,     	toggleattachx,      		{0} 		}, /* attachx command */
+    	{ SUPER,           			XK_t,		XK_y,     	toggleattachxstr,      		{0} 		}, /* attachxstr command */
 	{ SUPER,				XK_t,           XK_m,      	tabmode,        		{-1} 		}, /* tabmode command */
 	{ SUPER,	             		XK_t,		XK_f,  		togglefloating, 		{0} 		}, /* toggle float command */
 	{ SUPER,	                       	XK_t,		XK_s,      	togglesticky,   		{0} 		}, /* toggle sticky command */

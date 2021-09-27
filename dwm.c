@@ -108,7 +108,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurSwal, CurResizeHorzArrow, CurResizeVertArrow, CurLast }; /* cursor */
-enum { SchemeNorm, SchemeSel, SchemeHid, SchemeClose, SchemePrev, SchemeNext  }; /* color schemes */
+enum { SchemeNorm, SchemeSel, SchemeHid, SchemeClose, SchemePrev, SchemeNext, SchemeAttach  }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMIcon, NetWMState, NetWMCheck,
        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
@@ -257,6 +257,7 @@ static void attach(Client *c);
 static void attachstack(Client *c);
 static void attachx(Client *c);
 static void toggleattachx();
+static void toggleattachxstr();
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
 static void cleanup(void);
@@ -925,6 +926,12 @@ void
 toggleattachx()
 {
 	attachmode = (attachmode + 1) % 4;
+}
+
+void
+toggleattachxstr()
+{
+	showattachmodestr = !showattachmodestr;
 }
 
 void
@@ -2113,6 +2120,24 @@ drawbar(Monitor *m)
 	w = blw = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+	
+	char attachmodestr[64];
+	switch(attachmode % 4){
+		case 0: strcpy(attachmodestr, "master");
+			break;
+		case 1: strcpy(attachmodestr, "above");
+			break;
+		case 2: strcpy(attachmodestr, "aside");
+			break;
+		case 3: strcpy(attachmodestr, "below");
+			break;
+		case 4: strcpy(attachmodestr, "bottom");
+			break;
+	}
+	if (showattachmodestr) {
+		drw_setscheme(drw, scheme[SchemeAttach]);
+		x = drw_text(drw, x, 0, TEXTW(attachmodestr), bh, lrpad / 2, attachmodestr, 0);
+	}
 
 	/* Draw swalsymbol next to ltsymbol. */
 	if (m->sel && m->sel->swallowedby) {
