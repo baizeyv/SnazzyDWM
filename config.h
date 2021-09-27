@@ -119,8 +119,8 @@ static const XPoint stickyicon[]    = { {0,0}, {4,0}, {4,8}, {2,6}, {0,8}, {0,0}
 static const XPoint stickyiconbb    = {4,8};	/* defines the bottom right corner of the polygon's bounding box (speeds up scaling) */
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const int taglayouts[] = {1, 0, 2, 3, 4, 6, 5, 7, 8};
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const char *tagsalt[] = { "a", "b", "c", "d", "e", "6", "7", "8", "9" };
 static const int momentaryalttags = 0; /* 1 means alttags will show only when key is held down*/
 static const char ptagf[] = "[%s %s]";	/* format of a tag label */
@@ -129,6 +129,8 @@ static const int lcaselbl = 0;		/* 1 means make tag label lowercase */
 static const char altptagf[] = "%s %s";	/* format of a tag label */
 static const char altetagf[] = "%s";	/* format of an empty tag */
 static const int altlcaselbl = 1;		/* 1 means make tag label lowercase */	
+static const char *occtags[] = { "<<<<<1", "<2", "<3", "4", "5", "6", "7", "8", "9" };
+static const char *occtagsalt[] = { "<a", "<b", "<c", "d", "e", "6", "7", "8", "9" };
 
 static const char *tagsel[][2] = {
 	{ "#ffffff", "#ff0000" },

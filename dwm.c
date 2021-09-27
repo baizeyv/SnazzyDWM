@@ -2092,16 +2092,16 @@ drawbar(Monitor *m)
 
 		if (!selmon->alttag) {
 			if (masterclientontag[i])
-				snprintf(tagdisp, 64, ptagf, tags[i], masterclientontag[i]);
+				snprintf(tagdisp, 64, ptagf, (occ & 1 << i ? occtags[i] : tags[i]), masterclientontag[i]);
 			else
-				snprintf(tagdisp, 64, etagf, tags[i]);
+				snprintf(tagdisp, 64, etagf, (occ & 1 << i ? occtags[i] : tags[i]));
 			masterclientontag[i] = tagdisp;
 			tagw[i] = w = TEXTW(masterclientontag[i]);
 		} else {
 			if (altmasterclientontag[i])
-				snprintf(alttagdisp, 64, altptagf, tagsalt[i], altmasterclientontag[i]);
+				snprintf(alttagdisp, 64, altptagf, (occ & 1 << i ? occtagsalt[i] : tagsalt[i]), altmasterclientontag[i]);
 			else
-				snprintf(alttagdisp, 64, altetagf, tagsalt[i]);
+				snprintf(alttagdisp, 64, altetagf, (occ & 1 << i ? occtagsalt[i] : tagsalt[i]));
 			altmasterclientontag[i] = alttagdisp;
 			alttagw[i] = w = TEXTW(altmasterclientontag[i]);
 		}
