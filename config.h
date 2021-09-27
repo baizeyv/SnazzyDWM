@@ -173,15 +173,15 @@ static const Rule rules[] = {
 	 */
 
 	/* unmanaged  'conky can use this'
-	As such the value of the unmanged rule plays a part:
-		0 - the window is managed by the window manager
-		1 - the window will be placed above all other windows
-		2 - the window will be placed below all other windows
-		3 - the window is left as-is (neither lowered nor raised)
-   	*/
+	 *       As such the value of the unmanged rule plays a part:
+	 *       0 - the window is managed by the window manager
+	 *       1 - the window will be placed above all other windows
+	 *       2 - the window will be placed below all other windows
+	 *       3 - the window is left as-is (neither lowered nor raised)
+   	 */
 
 	/* switchtag
-	This patch adds an extra configuration option for individual rules where:
+		This patch adds an extra configuration option for individual rules where:
 		- 0 is default behaviour
 		- 1 automatically moves you to the tag of the newly opened application and
 		- 2 enables the tag of the newly opened application in addition to your existing enabled tags
