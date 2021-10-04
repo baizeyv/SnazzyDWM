@@ -77,8 +77,9 @@ static int horizpadbar        = 30;        /* horizontal padding for statusbar *
 static int vertpadbar         = 10;        /* vertical padding for statusbar */
 
 static char font1[] = "monospace:size=10";
-static char font2[] = "Fontawesome:size=10";
-static char *fonts[]          = { font1, font2 };
+static char font2[] = "SauceCodePro Nerd Font:size=10";
+static char font3[] = "JoyPixels:pixelsize=10:antialias=true:autohint=true";
+static char *fonts[]          = { font1, font2, font3 };
 static char dmenufont[]       = "monospace:size=10";
 
 /* MUST CONST */
@@ -123,7 +124,7 @@ static const XPoint stickyiconbb    = {4,8};	/* defines the bottom right corner 
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-static const char *tagsalt[] = { "a", "b", "c", "d", "e", "6", "7", "8", "9" };
+static const char *tagsalt[] = { "\uf120", "\uf7ae", "\uf121", "\uf04b", "\ue62e", "\uf251", "\ue727", "\uf537", "\uf684" };
 static const int momentaryalttags = 0; /* 1 means alttags will show only when key is held down*/
 static const char ptagf[] = "[%s %s]";	/* format of a tag label */
 static const char etagf[] = "[%s]";	/* format of an empty tag */
