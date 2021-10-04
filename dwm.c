@@ -942,6 +942,8 @@ void
 toggleattachx()
 {
 	attachmode = (attachmode + 1) % 4;
+	drawbars();
+	drawtabs();
 }
 
 void
