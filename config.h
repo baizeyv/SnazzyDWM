@@ -267,7 +267,6 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *layoutmenu_cmd = "/home/baizeyv/.local/std.app/baizeyv.SnazzyDWM/layoutmenu.sh";
-static const char *xr[] = { "xrdb", "/home/baizeyv/.Xresources", NULL };
 
 /*First arg only serves to match against key in rules*/
 static const char *scratchpadcmd[] = {"s", "st", "-t", "scratchpad", NULL}; 
@@ -320,13 +319,13 @@ ResourcePref resources[] = {
 		{ "tagrows",       		INTEGER, &tagrows },
 		{ "decorhints",       		INTEGER, &decorhints },
 		{ "lockfullscreen",       	INTEGER, &lockfullscreen },
-		{ "startontag",       	INTEGER, &startontag },
-		{ "user_bh",       	INTEGER, &user_bh },
-		{ "vertpad",       	INTEGER, &vertpad },
-		{ "sidepad",       	INTEGER, &sidepad },
+		{ "startontag",       		INTEGER, &startontag },
+		{ "user_bh",       		INTEGER, &user_bh },
+		{ "vertpad",       		INTEGER, &vertpad },
+		{ "sidepad",       		INTEGER, &sidepad },
 		{ "extrabarright",       	INTEGER, &extrabarright },
-		{ "horizpadbar",       	INTEGER, &horizpadbar },
-		{ "vertpadbar",       	INTEGER, &vertpadbar },
+		{ "horizpadbar",       		INTEGER, &horizpadbar },
+		{ "vertpadbar",       		INTEGER, &vertpadbar },
 		{ "mfact",      	 	FLOAT,   &mfact },
 };
 
@@ -335,7 +334,7 @@ ResourcePref resources[] = {
 static Key keys[] = {
 	/* modifier				chain key	key		function			argument		summary */
 	{ SUPER,		             	-1,		XK_Return, 	spawn,          		{.v = termcmd } }, /* terminal command */
-	{ SUPER,		             	XK_l,		XK_l, 		spawn,          		{.v = xr } 	}, 
+	{ SUPER,		             	XK_l,		XK_l, 		spawn,          		SHCMD("xrdb /home/baizeyv/.Xresources") 	}, 
 	{ ALT,		                       	-1,		XK_Return, 	zoom,           		{0} 		}, /* zoom command */
 	{ SUPER,	                       	-1,		XK_0,      	view,           		{.ui = ~0 } },
 	{ SUPER,	                       	-1,		XK_o,      	winview,        		{0} 		}, /* winview command */
